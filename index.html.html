@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kelas 8 I</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --jungle-deep:#123524;
+    --jungle-mid:#1F5E42;
+    --leaf:#4FA875;
+    --canopy-light:#A9E4B8;
+    --sun:#FFCF3F;
+    --mango:#F2905A;
+    --cream:#FBF6E8;
+    --bark:#7A5230;
+    --ink:#173324;
+    --shadow: 0 14px 30px -12px rgba(18,53,36,0.35);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Nunito', sans-serif;
+    background:var(--cream);
+    color:var(--ink);
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.display{
+    font-family:'Baloo 2', sans-serif;
+  }
+  a{color:inherit; text-decoration:none;}
+  img{max-width:100%; display:block;}
+
+  /* ---------- Utility ---------- */
+  .wrap{ max-width:1100px; margin:0 auto; padding:0 24px; }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-weight:800; letter-spacing:.08em; text-transform:uppercase;
+    font-size:0.78rem; color:var(--jungle-deep);
+    background:var(--canopy-light);
+    padding:6px 14px; border-radius:999px;
+  }
+  .btn{
+    display:inline-block; font-family:'Baloo 2',sans-serif; font-weight:700;
+    background:var(--sun); color:var(--jungle-deep);
+    padding:14px 30px; border-radius:999px; font-size:1.05rem;
+    box-shadow:var(--shadow); border:3px solid var(--jungle-deep);
+    transition:transform .25s ease;
+  }
+  .btn:hover{ transform:translateY(-3px) rotate(-1deg); }
+
+  section{ position:relative; padding:100px 0; scroll-margin-top:76px; }
+  .section-head{ max-width:600px; margin-bottom:48px; }
+  .section-head h2{ font-size:clamp(2rem,4vw,2.8rem); color:var(--jungle-deep); margin-top:10px; }
+  .section-head p{ margin-top:12px; font-size:1.05rem; color:#3c5a49; line-height:1.6; }
+
+  /* ---------- Vine spine (signature element) ---------- */
+  .vine-svg{
+    position:absolute; left:50%; top:0; transform:translateX(-50%);
+    width:6px; height:100%; z-index:0; pointer-events:none;
+  }
+  #vine-path{
+    stroke:var(--leaf); stroke-width:4; fill:none;
+    stroke-linecap:round;
+    stroke-dasharray:1;
+    stroke-dashoffset:1;
+    vector-effect:non-scaling-stroke;
+  }
+
+  /* ---------- Nav ---------- */
+  nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(18,53,36,0.92); backdrop-filter:blur(6px);
+    color:var(--cream);
+  }
+  nav .wrap{ display:flex; align-items:center; justify-content:space-between; padding:16px 24px; }
+  .brand{ font-family:'Baloo 2',sans-serif; font-weight:800; font-size:1.3rem; display:flex; gap:8px; align-items:center;}
+  .brand span{ color:var(--sun); }
+  .navlinks{ display:flex; gap:26px; font-weight:700; font-size:0.95rem; }
+  .navlinks a{ opacity:.85; transition:opacity .2s; }
+  .navlinks a:hover{ opacity:1; color:var(--sun); }
+  .navtoggle{ display:none; font-size:1.6rem; background:none; border:none; color:var(--cream); cursor:pointer; }
+  @media(max-width:720px){
+    .navlinks{ position:fixed; top:64px; left:0; right:0; background:var(--jungle-deep); flex-direction:column; padding:20px 24px; gap:16px; transform:translateY(-130%); transition:transform .3s ease; }
+    .navlinks.open{ transform:translateY(0); }
+    .navtoggle{ display:block; }
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative; padding:90px 0 140px; text-align:center;
+    background:radial-gradient(circle at 50% -10%, #2c6b48 0%, var(--jungle-deep) 60%);
+    color:var(--cream); overflow:hidden;
+  }
+  .hero .wrap{ position:relative; z-index:2; }
+  .hero .eyebrow{ background:var(--sun); }
+  .hero h1{
+    font-size:clamp(2.6rem,7vw,4.6rem); line-height:1.05; margin:22px 0 18px;
+  }
+  .hero h1 em{ font-style:normal; color:var(--sun); }
+  .hero p{ max-width:560px; margin:0 auto 32px; font-size:1.15rem; color:#DDEFE2; line-height:1.6; }
+  .canopy{ position:absolute; bottom:-4px; left:0; width:100%; line-height:0; z-index:1; }
+  .firefly{
+    position:absolute; width:8px; height:8px; border-radius:50%;
+    background:var(--sun); box-shadow:0 0 12px 4px rgba(255,207,63,.7);
+    animation:float 6s ease-in-out infinite;
+  }
+  @keyframes float{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-22px);} }
+
+  /* ---------- Reveal ---------- */
+  .reveal{ opacity:0; transform:translateY(28px); transition:opacity .7s ease, transform .7s ease; }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+
+  /* ---------- Profil kelas ---------- */
+  .stat-row{ display:flex; flex-wrap:wrap; gap:18px; margin-bottom:52px; }
+  .stat-leaf{
+    flex:1 1 150px; background:var(--jungle-mid); color:var(--cream);
+    border-radius:26px 26px 26px 4px; padding:22px 20px; box-shadow:var(--shadow);
+  }
+  .stat-leaf .num{ font-family:'Baloo 2'; font-size:2.1rem; font-weight:800; color:var(--sun); }
+  .stat-leaf .lbl{ font-size:0.85rem; font-weight:700; opacity:.9; }
+
+  .wali-card{
+    display:flex; gap:22px; align-items:center; background:#fff;
+    border:3px dashed var(--leaf); border-radius:28px; padding:26px; margin-bottom:50px;
+    box-shadow:var(--shadow);
+  }
+  .wali-avatar{
+    width:88px; height:88px; border-radius:50%; flex-shrink:0;
+    background:linear-gradient(145deg,var(--canopy-light),var(--leaf));
+    display:flex; align-items:center; justify-content:center; font-size:2.2rem;
+  }
+  .wali-card h3{ color:var(--jungle-deep); font-size:1.2rem; }
+  .wali-card p{ font-size:0.92rem; color:#4b6b5a; margin-top:4px; }
+
+  /* ---------- Cari & Filter Siswa ---------- */
+  .siswa-toolbar{ margin-bottom:26px; }
+  .siswa-search{
+    position:relative; margin-bottom:16px;
+  }
+  .siswa-search input{
+    width:100%; font-family:'Nunito',sans-serif; font-weight:700; font-size:1rem;
+    padding:14px 20px 14px 46px; border-radius:999px; border:3px solid var(--leaf);
+    background:#fff; color:var(--ink); outline:none; transition:border-color .2s;
+  }
+  .siswa-search input:focus{ border-color:var(--jungle-deep); }
+  .siswa-search::before{
+    content:'🔍'; position:absolute; left:18px; top:50%; transform:translateY(-50%);
+    font-size:1.05rem; pointer-events:none;
+  }
+  .siswa-filters{ display:flex; flex-wrap:wrap; gap:10px; }
+  .filter-chip{
+    font-family:'Baloo 2',sans-serif; font-weight:700; font-size:0.85rem;
+    padding:8px 18px; border-radius:999px; background:var(--canopy-light); color:var(--jungle-deep);
+    border:none; cursor:pointer; transition:.2s;
+  }
+  .filter-chip.active{ background:var(--sun); box-shadow:var(--shadow); }
+  .siswa-count{
+    margin-top:14px; font-size:0.85rem; font-weight:700; color:#4b6b5a;
+  }
+  .siswa-empty{
+    display:none; text-align:center; padding:40px 20px; color:#6a8577; font-weight:700;
+  }
+  .siswa-empty.show{ display:block; }
+
+  .anggota-grid{
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:20px;
+  }
+  .siswa-card{
+    background:#fff; border-radius:20px 20px 20px 4px; padding:16px 12px; text-align:center;
+    box-shadow:var(--shadow); transition:transform .25s ease, opacity .25s ease;
+  }
+  .siswa-card:hover{ transform:translateY(-6px) rotate(-1deg); }
+  .siswa-card.hidden{ display:none; }
+  .siswa-avatar{
+    width:56px; height:56px; margin:0 auto 10px; border-radius:50%;
+    background:var(--canopy-light); display:flex; align-items:center; justify-content:center;
+    font-family:'Baloo 2'; font-weight:800; color:var(--jungle-deep); font-size:1.1rem;
+  }
+  .siswa-card .nm{ font-weight:800; font-size:0.86rem; color:var(--jungle-deep); }
+  .siswa-card .rl{ font-size:0.72rem; color:#6a8577; margin-top:2px; }
+
+  /* ---------- Jadwal ---------- */
+  .jadwal-panel{ background:var(--jungle-deep); border-radius:30px; padding:36px; box-shadow:var(--shadow); }
+  .tabs{ display:flex; flex-wrap:wrap; gap:10px; margin-bottom:26px; }
+  .tab-btn{
+    font-family:'Baloo 2'; font-weight:700; font-size:0.9rem;
+    padding:9px 18px; border-radius:999px; background:var(--jungle-mid); color:var(--cream);
+    border:none; cursor:pointer; transition:.2s;
+  }
+  .tab-btn.active{ background:var(--sun); color:var(--jungle-deep); }
+  .jadwal-list{ display:none; flex-direction:column; gap:10px; }
+  .jadwal-list.active{ display:flex; }
+  .jadwal-item{
+    display:flex; justify-content:space-between; align-items:center;
+    background:rgba(255,255,255,0.06); border-radius:14px; padding:14px 18px;
+    color:var(--cream); font-weight:700;
+  }
+  .jadwal-item .jam{ color:var(--sun); font-size:0.85rem; font-family:'Baloo 2'; }
+
+  /* ---------- Pengumuman ---------- */
+  .pengumuman-list{ display:flex; flex-direction:column; gap:16px; }
+  .pgm-card{
+    display:flex; gap:18px; background:#fff; border-radius:20px; padding:20px;
+    box-shadow:var(--shadow); border-left:8px solid var(--mango);
+  }
+  .pgm-card.tugas{ border-left-color:var(--leaf); }
+  .pgm-card.info{ border-left-color:var(--sun); }
+  .pgm-date{
+    flex-shrink:0; width:58px; height:58px; border-radius:16px; background:var(--jungle-deep);
+    color:var(--cream); display:flex; flex-direction:column; align-items:center; justify-content:center;
+    font-family:'Baloo 2'; font-weight:800; line-height:1;
+  }
+  .pgm-date .d{ font-size:1.2rem; }
+  .pgm-date .m{ font-size:0.65rem; text-transform:uppercase; }
+  .pgm-card h3{ font-size:1.02rem; color:var(--jungle-deep); }
+  .pgm-card p{ font-size:0.88rem; color:#516b5c; margin-top:4px; }
+
+  /* ---------- Footer ---------- */
+  footer{
+    background:var(--jungle-deep); color:var(--cream); text-align:center;
+    padding:50px 24px 34px; margin-top:40px;
+  }
+  footer .brand{ justify-content:center; margin-bottom:10px; }
+  footer p{ font-size:0.85rem; opacity:.7; }
+  .note{
+    max-width:640px; margin:14px auto 0; font-size:0.78rem; opacity:.55; line-height:1.5;
+  }
+
+/* ---------- Dark mode ---------- */
+body.dark{--cream:#10251b;--ink:#edf7ee;background:#0b1b13;color:var(--ink)}
+body.dark .section-head p,body.dark .siswa-count,body.dark .wali-card p,body.dark .pgm-card p{color:#b9d3c0}
+body.dark .wali-card,body.dark .siswa-card,body.dark .pgm-card{background:#173526;color:#edf7ee}
+body.dark .wali-card h3,body.dark .siswa-card .nm,body.dark .pgm-card h3,body.dark .section-head h2{color:#dff5e4}
+body.dark .siswa-search input{background:#173526;color:#fff}
+body.dark .canopy path{fill:#10251b}
+.theme-toggle{border:2px solid var(--sun);background:transparent;color:var(--cream);border-radius:999px;padding:8px 12px;cursor:pointer;font-weight:800}
+
+/* ---------- Gallery ---------- */
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:18px}
+.gallery-item{position:relative;overflow:hidden;border-radius:22px;background:var(--jungle-mid);box-shadow:var(--shadow);cursor:pointer;min-height:180px}
+.gallery-item img{width:100%;height:220px;object-fit:cover;transition:transform .3s}
+.gallery-item:hover img{transform:scale(1.06)}
+.gallery-item figcaption{position:absolute;left:0;right:0;bottom:0;padding:28px 14px 14px;color:white;font-weight:800;background:linear-gradient(transparent,rgba(0,0,0,.8))}
+.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100;align-items:center;justify-content:center;padding:24px}
+.lightbox.open{display:flex}
+.lightbox img{max-width:95%;max-height:85%;border-radius:18px}
+.lightbox button{position:absolute;top:20px;right:20px;border:0;border-radius:50%;width:42px;height:42px;font-size:1.4rem;cursor:pointer}
+
+/* ---------- Task cards ---------- */
+.task-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+.task-card{background:#fff;border-radius:20px;padding:22px;box-shadow:var(--shadow);border-top:6px solid var(--leaf)}
+body.dark .task-card{background:#173526;color:#edf7ee}
+.task-card h3{color:var(--jungle-deep);margin-bottom:8px}
+body.dark .task-card h3{color:#dff5e4}
+.task-meta{font-size:.8rem;color:#6a8577;font-weight:800;margin-bottom:10px}
+.task-status{display:inline-block;margin-top:14px;padding:6px 10px;border-radius:999px;background:var(--canopy-light);color:var(--jungle-deep);font-size:.78rem;font-weight:800}
+
+
+/* ---------- V4 Modern Dashboard ---------- */
+.hero-tools{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:18px}
+.dashboard-grid{display:grid;grid-template-columns:1.35fr .65fr;gap:18px;margin-bottom:26px}
+.dashboard-card{background:#fff;border-radius:26px;padding:24px;box-shadow:var(--shadow);border:2px solid rgba(79,168,117,.18)}
+.dashboard-card h3{color:var(--jungle-deep);font-size:1.25rem}
+.today-card{background:linear-gradient(135deg,var(--jungle-deep),var(--jungle-mid));color:var(--cream)}
+.today-card h3{color:var(--sun)}
+.next-lesson{font-family:'Baloo 2';font-size:1.65rem;margin:6px 0}
+.countdown{font-weight:800;color:var(--sun);font-size:.9rem}
+.mini-list{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.mini-row{display:flex;justify-content:space-between;gap:10px;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.07)}
+.mini-row .time{color:var(--sun);font-family:'Baloo 2'}
+.event-card{display:flex;align-items:center;gap:14px}
+.event-icon{width:48px;height:48px;border-radius:15px;background:var(--canopy-light);display:grid;place-items:center;font-size:1.4rem;flex-shrink:0}
+.event-card p{font-size:.82rem;color:#5c7567;margin-top:3px}
+body.dark .dashboard-card{background:#173526;border-color:rgba(169,228,184,.15)}
+body.dark .dashboard-card h3{color:#dff5e4}
+body.dark .event-card p{color:#b9d3c0}
+.profile-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:120;align-items:center;justify-content:center;padding:20px}
+.profile-modal.open{display:flex}
+.profile-box{width:min(440px,100%);background:#fff;border-radius:28px;padding:28px;text-align:center;box-shadow:0 25px 70px rgba(0,0,0,.3);position:relative}
+.profile-box .big-avatar{width:92px;height:92px;border-radius:50%;margin:0 auto 12px;display:grid;place-items:center;background:var(--canopy-light);font-size:2.5rem}
+.profile-box h3{font-size:1.5rem;color:var(--jungle-deep)}
+.profile-box p{margin-top:5px;color:#5d7567}
+.profile-close{position:absolute;right:15px;top:15px;width:38px;height:38px;border:0;border-radius:50%;cursor:pointer;font-size:1.2rem}
+body.dark .profile-box{background:#173526;color:#edf7ee}
+body.dark .profile-box h3{color:#dff5e4}
+body.dark .profile-box p{color:#b9d3c0}
+.siswa-card{cursor:pointer}
+@media(max-width:720px){.dashboard-grid{grid-template-columns:1fr}.hero{padding-bottom:125px}.dashboard-card{padding:20px}}
+
+
+/* ---------- V5: hitung mundur kelulusan ---------- */
+.grad-card{position:relative;overflow:hidden;background:linear-gradient(140deg,#123524 0%,#1F5E42 100%);color:#FBF6E8;border-radius:34px;padding:36px 34px 28px;box-shadow:var(--shadow)}
+.grad-card h2{font-size:clamp(1.7rem,4vw,2.4rem);color:#FFCF3F;margin-top:12px;line-height:1.1}
+.grad-date{margin-top:8px;font-weight:700;opacity:.85}
+.grad-clock{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:26px 0 30px}
+.grad-unit{background:rgba(255,255,255,.08);border:2px solid rgba(169,228,184,.25);border-radius:26px 26px 26px 6px;padding:18px 6px 14px;text-align:center}
+.grad-unit b{display:block;font-family:'Baloo 2',sans-serif;font-weight:800;font-size:clamp(2rem,7vw,3.6rem);line-height:1;color:#FFCF3F;font-variant-numeric:tabular-nums}
+.grad-unit span{display:block;margin-top:6px;font-weight:800;font-size:.85rem;color:#DDEFE2}
+.grad-track{position:relative;height:14px;border-radius:999px;background:rgba(0,0,0,.28);margin:0 14px}
+.grad-fill{height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#4FA875,#A9E4B8)}
+.grad-marker{position:absolute;top:50%;left:0;transform:translate(-50%,-56%);font-size:1.7rem;line-height:1}
+.grad-foot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:16px;font-weight:700;font-size:.9rem;color:#DDEFE2}
+@media(max-width:560px){
+  .grad-card{padding:26px 16px 22px;border-radius:26px}
+  .grad-clock{gap:8px}
+  .grad-unit{padding:13px 4px 10px;border-radius:18px 18px 18px 4px}
+  .grad-unit b{font-size:1.75rem}
+}
+
+/* ---------- V5: data dari admin ---------- */
+.sub-head{margin:28px 0 16px;color:var(--jungle-deep)}
+body.dark .sub-head{color:#dff5e4}
+.empty-note{color:#6a8577;font-weight:700;padding:14px 0}
+body.dark .empty-note{color:#b9d3c0}
+.jadwal-empty{color:var(--cream);opacity:.75;font-weight:700;padding:14px 4px}
+.pgm-when{font-size:.76rem;font-weight:800;color:#6a8577;margin-bottom:2px}
+body.dark .pgm-when{color:#9dbfa9}
+.pgm-card.acara{border-left-color:var(--leaf)}
+.pgm-card.lomba{border-left-color:var(--mango)}
+.pgm-card.lewat{opacity:.62}
+.task-card.agenda{border-top-color:var(--sun)}
+.task-card.info{border-top-color:var(--canopy-light)}
+.task-card.penting{border-top-color:var(--mango)}
+.preview-bar{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:200;background:var(--sun);color:#123524;border:3px solid #123524;border-radius:999px;padding:9px 20px;font-weight:800;font-size:.9rem;box-shadow:var(--shadow);max-width:calc(100vw - 24px);text-align:center}
+body.dark .today-card{background:linear-gradient(135deg,#123524,#1F5E42);color:#FBF6E8}
+body.dark .today-card h3{color:var(--sun)}
+</style>
+</head>
+<body>
+
+<svg class="vine-svg" preserveAspectRatio="none" viewBox="0 0 10 1000">
+  <path id="vine-path" d="M5,0 C 20,150 -10,300 5,450 C 20,600 -10,750 5,1000" />
+</svg>
+
+<nav>
+  <div class="wrap">
+    <div class="brand">🌿 <span>Kelas 8 I</span></div>
+    <div class="navlinks" id="navlinks">
+      <a href="#dashboard">Beranda</a>
+      <a href="#profil">Profil</a>
+      <a href="#jadwal">Jadwal</a>
+      <a href="#pengumuman">Pengumuman</a>
+      <a href="#galeri">Galeri</a>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px"><button class="theme-toggle" id="themeToggle" aria-label="Ganti tema">🌙</button><button class="navtoggle" id="navtoggle">☰</button></div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="firefly" style="left:12%; top:30%; animation-delay:0s;"></div>
+  <div class="firefly" style="left:78%; top:20%; animation-delay:1.4s;"></div>
+  <div class="firefly" style="left:60%; top:55%; animation-delay:2.6s;"></div>
+  <div class="firefly" style="left:25%; top:65%; animation-delay:3.4s;"></div>
+  <div class="wrap">
+    <span class="eyebrow">🐒 Selamat datang di kelas kami</span>
+    <h1>Menjelajah, <em>belajar</em>,<br>dan tumbuh bersama</h1>
+    <p>Ini rumah digital untuk Kelas 8 I — tempat kami menyimpan cerita, jadwal, dan kabar seru seputar kelas.</p>
+    <a class="btn" href="https://www.instagram.com/eight.incrediblen9t/" target="_blank" rel="noopener noreferrer">Jelajahi Kelas 🌱</a>
+  </div>
+  <svg class="canopy" viewBox="0 0 1440 120" preserveAspectRatio="none">
+    <path fill="#FBF6E8" d="M0,64 C240,120 360,0 600,40 C840,80 960,10 1200,50 C1320,70 1380,60 1440,48 L1440,120 L0,120 Z"/>
+  </svg>
+</header>
+
+<main>
+
+<section id="dashboard" style="padding-bottom:40px">
+  <div class="wrap">
+    <div class="dashboard-grid">
+      <div class="dashboard-card today-card reveal">
+        <h3>🌱 Hari Ini di Kelas 8 I</h3>
+        <div id="todayDate" style="opacity:.85;margin-top:4px">Memuat tanggal...</div>
+        <div class="next-lesson" id="nextLesson">Memuat jadwal...</div>
+        <div class="countdown" id="lessonCountdown">Menghitung waktu...</div>
+        <div class="mini-list" id="todaySchedule"></div>
+      </div>
+      <div class="dashboard-card reveal">
+        <div class="event-card">
+          <div class="event-icon">📢</div>
+          <div><h3>Info Terbaru</h3><p id="latestInfo">Cek bagian Pengumuman untuk update kelas.</p></div>
+        </div>
+        <div class="event-card" style="margin-top:18px">
+          <div class="event-icon">👥</div>
+          <div><h3 id="dashSiswa">32 Siswa</h3><p>Kelas 8 I — aktif dan siap belajar bersama.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <section id="kelulusan" style="padding:10px 0 50px">
+  <div class="wrap">
+    <div class="grad-card reveal">
+      <span class="eyebrow">🎓 Hitung mundur</span>
+      <h2 id="gradJudul">Menuju kelulusan 2028</h2>
+      <p class="grad-date" id="gradTanggal"></p>
+      <div class="grad-clock" role="timer" aria-label="Hitung mundur kelulusan">
+        <div class="grad-unit"><b id="gd">0</b><span>hari</span></div>
+        <div class="grad-unit"><b id="gh">00</b><span>jam</span></div>
+        <div class="grad-unit"><b id="gm">00</b><span>menit</span></div>
+        <div class="grad-unit"><b id="gs">00</b><span>detik</span></div>
+      </div>
+      <div class="grad-track"><div class="grad-fill" id="gradFill"></div><div class="grad-marker" id="gradMarker">🐒</div></div>
+      <div class="grad-foot"><span id="gradPersen"></span><span id="gradPesan"></span></div>
+    </div>
+  </div>
+</section>
+
+  <section id="profil">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">🌳 Profil Kelas</span>
+        <h2>Kenalan sama Kelas 8 i</h2>
+        <p>Halo semuanya! 👋Perkenalkan, kami dari <strong>Kelas 8 I</strong>. Senang bisa bertemu dan berkenalan dengan kalian semua. Semoga kita bisa saling mengenal dan menjalin hubungan yang baik. Terima kasih!</p>
+      </div>
+
+      <div class="stat-row reveal">
+        <div class="stat-leaf"><div class="num" id="statSiswa">32</div><div class="lbl">Jumlah Siswa</div></div>
+        <div class="stat-leaf"><div class="num" id="statMapel">12</div><div class="lbl">Mata Pelajaran</div></div>
+        <div class="stat-leaf"><div class="num" id="statTahun">3</div><div class="lbl" id="statTahunLbl">Tahun Ajaran 2025/2028</div></div>
+      </div>
+
+      <div class="wali-card reveal">
+        <div class="wali-avatar" id="waliEmoji">🦁</div>
+        <div>
+          <h3 id="waliNama">Bu Tia Hijratul Latifah</h3>
+          <p id="waliKutipan">Wali Kelas</p>
+        </div>
+      </div>
+
+      <div class="siswa-toolbar reveal">
+        <div class="siswa-search">
+          <input type="text" id="siswaSearch" placeholder="Cari nama siswa..." aria-label="Cari nama siswa">
+        </div>
+        <div class="siswa-filters" id="siswaFilters">
+          <button class="filter-chip active" data-role="semua">Semua</button>
+          <button class="filter-chip" data-role="ketua kelas">Ketua Kelas</button>
+          <button class="filter-chip" data-role="wakil ketua">Wakil Ketua</button>
+          <button class="filter-chip" data-role="sekretaris">Sekretaris</button>
+          <button class="filter-chip" data-role="bendahara">Bendahara</button>
+          <button class="filter-chip" data-role="anggota">Anggota</button>
+        </div>
+        <div class="siswa-count" id="siswaCount"></div>
+      </div>
+
+      <div class="anggota-grid reveal" id="anggotaGrid"></div>
+      <div class="siswa-empty" id="siswaEmpty">🍂 Hmm, siswa dengan nama itu tidak ditemukan.</div>
+    </div>
+  </section>
+
+  <section id="jadwal">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">🍃 Jadwal Pelajaran</span>
+        <h2>Jadwal pelajaran kelas 8 i</h2>
+        <p>Klik hari untuk lihat jadwal pelajarannya.</p>
+      </div>
+      <div class="jadwal-panel reveal">
+        <div class="tabs" id="tabs">
+          <button class="tab-btn active" data-day="senin">Senin</button>
+          <button class="tab-btn" data-day="selasa">Selasa</button>
+          <button class="tab-btn" data-day="rabu">Rabu</button>
+          <button class="tab-btn" data-day="kamis">Kamis</button>
+          <button class="tab-btn" data-day="jumat">Jumat</button>
+        </div>
+
+        <div class="jadwal-list active" data-day="senin">
+        </div>
+        <div class="jadwal-list" data-day="selasa">
+        </div>
+        <div class="jadwal-list" data-day="rabu">
+        </div>
+        <div class="jadwal-list" data-day="kamis">
+        </div>
+        <div class="jadwal-list" data-day="jumat">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="galeri">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">📸 Galeri Kegiatan</span>
+        <h2>Momen seru Kelas 8 I</h2>
+        <p>Kumpulan foto kegiatan Kelas 8 I.</p>
+      </div>
+      <div class="gallery-grid reveal" id="galeriGrid"></div>
+    </div>
+  </section>
+
+  <section id="pengumuman">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">🔔 Pengumuman</span>
+        <h2>Kabar terbaru dari kelas 8 i</h2>
+        <p>Update tugas, info, dan agenda kelas terbaru ada di sini.</p>
+      </div>
+      <h3 class="sub-head">📚 Tugas & Agenda Kelas</h3>
+      <div class="task-list reveal" id="tugasList"></div>
+
+      <h3 class="sub-head" style="margin-top:38px">🗓️ Kegiatan Kelas & Sekolah</h3>
+      <div class="pengumuman-list reveal" id="kegiatanList"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="brand">🌿 Kelas 8 I</div>
+  <p>Dibuat dengan semangat menjelajah untuk seluruh anggota kelas.</p>
+  <p class="note">Website ini milik kelas 8 i di buat oleh Excel</p>
+</footer>
+
+
+<div class="profile-modal" id="profileModal" role="dialog" aria-modal="true" aria-label="Profil siswa">
+  <div class="profile-box">
+    <button class="profile-close" id="profileClose" aria-label="Tutup">✕</button>
+    <div class="big-avatar" id="profileAvatar">🌱</div>
+    <h3 id="profileName">Nama Siswa</h3>
+    <p id="profileRole">Anggota</p>
+    <p style="margin-top:14px;font-size:.9rem">Informasi singkat siswa Kelas 8 I.</p>
+  </div>
+</div>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-label="Pratinjau foto"><button id="closeLightbox" aria-label="Tutup">✕</button><img id="lightboxImg" alt="Pratinjau foto"></div>
+
+<script src="data.js"></script>
+<script>
+/* ============================================================
+   Isi website dibaca dari data.js (dibuat oleh halaman admin).
+   Kalau data.js tidak ada, dipakai data bawaan di bawah ini.
+   ============================================================ */
+(function(){
+  var DEFAULT_DATA = {
+  "versi": 1,
+  "kelulusan": {
+    "judul": "Menuju kelulusan 2028",
+    "mulai": "2025-07-14",
+    "tanggal": "2028-06-16",
+    "jam": "08:00",
+    "pesan": "Sedikit demi sedikit, kita tumbuh bersama. 🌱"
+  },
+  "profil": {
+    "wali": {
+      "nama": "Bu Tia Hijratul Latifah",
+      "emoji": "🦁",
+      "kutipan": "Setiap anak punya cara tumbuhnya sendiri, seperti pohon di hutan."
+    },
+    "mapel": 12,
+    "periode": "2025/2028"
+  },
+  "siswa": [
+    {
+      "nama": "Gilang Pratama",
+      "no": 9,
+      "peran": "Ketua Kelas",
+      "emoji": "🐯"
+    },
+    {
+      "nama": "Tri Hardiansyah",
+      "no": 30,
+      "peran": "Wakil Ketua",
+      "emoji": "🦜"
+    },
+    {
+      "nama": "Ashaskya Berkah",
+      "no": 4,
+      "peran": "Sekretaris",
+      "emoji": "🐨"
+    },
+    {
+      "nama": "Dame Septiana Napitulu",
+      "no": 6,
+      "peran": "Bendahara",
+      "emoji": "🐸"
+    },
+    {
+      "nama": "Ai Nurmalasari",
+      "no": 1,
+      "peran": "Anggota",
+      "emoji": "🦋"
+    },
+    {
+      "nama": "Alvin Pratama",
+      "no": 2,
+      "peran": "Anggota",
+      "emoji": "🐢"
+    },
+    {
+      "nama": "Arya Putra G",
+      "no": 3,
+      "peran": "Anggota",
+      "emoji": "🦥"
+    },
+    {
+      "nama": "Daizy Alwi Ilham",
+      "no": 5,
+      "peran": "Anggota",
+      "emoji": "🦉"
+    },
+    {
+      "nama": "Excel Febriano",
+      "no": 7,
+      "peran": "Anggota",
+      "emoji": "🐼"
+    },
+    {
+      "nama": "Fhelia Permana P",
+      "no": 8,
+      "peran": "Anggota",
+      "emoji": "🦒"
+    },
+    {
+      "nama": "Hafizh Ken Albasith",
+      "no": 10,
+      "peran": "Anggota",
+      "emoji": "🐘"
+    },
+    {
+      "nama": "Irva Ahmad Fauzan",
+      "no": 12,
+      "peran": "Anggota",
+      "emoji": "🦓"
+    },
+    {
+      "nama": "Khalifah Avanza F",
+      "no": 13,
+      "peran": "Anggota",
+      "emoji": "🐵"
+    },
+    {
+      "nama": "M. Anwar Nasihin",
+      "no": 14,
+      "peran": "Anggota",
+      "emoji": "🦩"
+    },
+    {
+      "nama": "M. RAFI SYAHIDAN",
+      "no": 15,
+      "peran": "Anggota",
+      "emoji": "🦔"
+    },
+    {
+      "nama": "M. Dafa Farizky Y",
+      "no": 16,
+      "peran": "Anggota",
+      "emoji": "🐿️"
+    },
+    {
+      "nama": "M. KAFIE EL AZAM",
+      "no": 17,
+      "peran": "Anggota",
+      "emoji": "🦚"
+    },
+    {
+      "nama": "M. Vidy Rahman",
+      "no": 18,
+      "peran": "Anggota",
+      "emoji": "🐊"
+    },
+    {
+      "nama": "Naira Riva Tunnisa",
+      "no": 19,
+      "peran": "Anggota",
+      "emoji": "🦦"
+    },
+    {
+      "nama": "Nazla Choerunissa",
+      "no": 20,
+      "peran": "Anggota",
+      "emoji": "🦨"
+    },
+    {
+      "nama": "Padli Muhammad F",
+      "no": 21,
+      "peran": "Anggota",
+      "emoji": "🐺"
+    },
+    {
+      "nama": "Rafka Ramadhan",
+      "no": 22,
+      "peran": "Anggota",
+      "emoji": "🦇"
+    },
+    {
+      "nama": "Rangga Zaky R",
+      "no": 23,
+      "peran": "Anggota",
+      "emoji": "🐍"
+    },
+    {
+      "nama": "Reyza Aulia",
+      "no": 24,
+      "peran": "Anggota",
+      "emoji": "🦎"
+    },
+    {
+      "nama": "Ridwan Abdul Gani",
+      "no": 25,
+      "peran": "Anggota",
+      "emoji": "🐹"
+    },
+    {
+      "nama": "Ruliana Asyril M",
+      "no": 26,
+      "peran": "Anggota",
+      "emoji": "🦡"
+    },
+    {
+      "nama": "Sani Nur Cahyani",
+      "no": 27,
+      "peran": "Anggota",
+      "emoji": "🐔"
+    },
+    {
+      "nama": "Siti Mursyida M",
+      "no": 28,
+      "peran": "Anggota",
+      "emoji": "🦆"
+    },
+    {
+      "nama": "Tira Aulia",
+      "no": 29,
+      "peran": "Anggota",
+      "emoji": "🐇"
+    },
+    {
+      "nama": "Zakiyah Nazla H",
+      "no": 31,
+      "peran": "Anggota",
+      "emoji": "🦅"
+    },
+    {
+      "nama": "Karina Putri",
+      "no": 32,
+      "peran": "Anggota",
+      "emoji": "🐝"
+    },
+    {
+      "nama": "Verlita Dinda Eviana",
+      "no": 33,
+      "peran": "Anggota",
+      "emoji": "🐞"
+    }
+  ],
+  "jadwal": {
+    "senin": [
+      {
+        "mapel": "TIK",
+        "mulai": "08:05",
+        "selesai": "09:25"
+      },
+      {
+        "mapel": "MATEMATIKA",
+        "mulai": "09:25",
+        "selesai": "11:05"
+      },
+      {
+        "mapel": "IPS",
+        "mulai": "11:05",
+        "selesai": "11:45"
+      },
+      {
+        "mapel": "B.SUNDA",
+        "mulai": "11:45",
+        "selesai": "12:25"
+      }
+    ],
+    "selasa": [
+      {
+        "mapel": "B.INGGRIS",
+        "mulai": "07:25",
+        "selesai": "08:05"
+      },
+      {
+        "mapel": "IPS",
+        "mulai": "08:05",
+        "selesai": "09:25"
+      },
+      {
+        "mapel": "Seni Budaya",
+        "mulai": "09:25",
+        "selesai": "11:05"
+      },
+      {
+        "mapel": "PJOK",
+        "mulai": "11:05",
+        "selesai": "12:25"
+      }
+    ],
+    "rabu": [
+      {
+        "mapel": "IPA",
+        "mulai": "07:25",
+        "selesai": "08:45"
+      },
+      {
+        "mapel": "PABP",
+        "mulai": "08:45",
+        "selesai": "10:05"
+      },
+      {
+        "mapel": "B.INDO",
+        "mulai": "10:05",
+        "selesai": "12:25"
+      }
+    ],
+    "kamis": [
+      {
+        "mapel": "IPA",
+        "mulai": "07:25",
+        "selesai": "08:45"
+      },
+      {
+        "mapel": "Bahasa INGGRIS",
+        "mulai": "08:45",
+        "selesai": "10:05"
+      },
+      {
+        "mapel": "MATEMATIKA",
+        "mulai": "10:25",
+        "selesai": "11:45"
+      }
+    ],
+    "jumat": [
+      {
+        "mapel": "Bahasa INDO",
+        "mulai": "08:00",
+        "selesai": "09:10"
+      },
+      {
+        "mapel": "PPKN",
+        "mulai": "09:10",
+        "selesai": "10:40"
+      }
+    ]
+  },
+  "galeri": [
+    {
+      "id": "g1",
+      "src": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=900&q=80",
+      "caption": "Kebersamaan kelas"
+    },
+    {
+      "id": "g2",
+      "src": "https://images.unsplash.com/photo-1504159506876-f8338247a14a?auto=format&fit=crop&w=900&q=80",
+      "caption": "Belajar bersama"
+    },
+    {
+      "id": "g3",
+      "src": "https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=900&q=80",
+      "caption": "Kegiatan kelompok"
+    },
+    {
+      "id": "g4",
+      "src": "https://images.unsplash.com/photo-1531058020387-3be344556be6?auto=format&fit=crop&w=900&q=80",
+      "caption": "Acara sekolah"
+    }
+  ],
+  "kegiatan": [
+    {
+      "id": "k1",
+      "tanggal": "2026-08-17",
+      "judul": "ACARA AGUSTUSAN",
+      "deskripsi": "dalam memperingati hari ulang tahun republic indonesia ke 81",
+      "tipe": "acara"
+    },
+    {
+      "id": "k2",
+      "tanggal": "2026-12-10",
+      "judul": "DIES NATALIES",
+      "deskripsi": "DALAM MEMPERINGATI ANNIVERSARY SMPN 9 TASIKMALAYA",
+      "tipe": "info"
+    },
+    {
+      "id": "k3",
+      "tanggal": "2026-08-25",
+      "judul": "PORAK",
+      "deskripsi": "Lomba Antar Kelas",
+      "tipe": "lomba"
+    }
+  ],
+  "pengumuman": [
+    {
+      "id": "p1",
+      "kategori": "Tugas",
+      "meta": "TIK • Deadline menyesuaikan guru",
+      "judul": "Pengumpulan tugas website HTML",
+      "isi": "Buat atau update halaman website kelas dengan HTML, CSS, dan JavaScript.",
+      "status": ""
+    },
+    {
+      "id": "p2",
+      "kategori": "Tugas",
+      "meta": "Bahasa Sunda • Cek pengumuman",
+      "judul": "Rangkuman materi",
+      "isi": "Tulis rangkuman materi di buku tugas dengan bahasa yang mudah dipahami.",
+      "status": "Belum selesai"
+    },
+    {
+      "id": "p3",
+      "kategori": "Agenda",
+      "meta": "Agenda kelas",
+      "judul": "Persiapan kegiatan kelas",
+      "isi": "Diskusikan pembagian tugas dan perlengkapan sebelum kegiatan berlangsung.",
+      "status": ""
+    }
+  ]
+};
+  var $ = function(id){ return document.getElementById(id); };
+
+  var DATA = window.KELAS_DATA || DEFAULT_DATA;
+  var params = new URLSearchParams(location.search);
+  if (params.get('preview') === '1') {           // pratinjau draf dari halaman admin (browser yang sama)
+    try {
+      var draft = localStorage.getItem('kelas8i-draft');
+      if (draft) {
+        DATA = JSON.parse(draft);
+        var bar = document.createElement('div');
+        bar.className = 'preview-bar';
+        bar.textContent = '👀 Pratinjau draf admin — belum terbit untuk pengunjung';
+        document.body.appendChild(bar);
+      }
+    } catch (e) {}
+  }
+  var K = Object.assign({}, DEFAULT_DATA.kelulusan, DATA.kelulusan);
+  var P = Object.assign({}, DEFAULT_DATA.profil, DATA.profil);
+  P.wali = Object.assign({}, DEFAULT_DATA.profil.wali, (DATA.profil || {}).wali);
+  var siswa = Array.isArray(DATA.siswa) ? DATA.siswa : [];
+  var galeri = Array.isArray(DATA.galeri) ? DATA.galeri : [];
+  var kegiatan = Array.isArray(DATA.kegiatan) ? DATA.kegiatan : [];
+  var pengumuman = Array.isArray(DATA.pengumuman) ? DATA.pengumuman : [];
+  var jadwal = DATA.jadwal || {};
+
+  function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function safeSrc(u){ u = String(u || '').trim(); return /^(https?:\/\/|data:image\/|\.{0,2}\/|[\w\-][\w\-\/.]*$)/i.test(u) ? u : ''; }
+  function pad(n){ return n < 10 ? '0' + n : '' + n; }
+  var BLN = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+  var BLN_P = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+  var HARI_N = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+  function tgl(str){
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(str || ''); if (!m) return null;
+    return {y:+m[1], mo:+m[2], d:+m[3], dt:new Date(+m[1], +m[2]-1, +m[3])};
+  }
+
+  /* ---------- Profil kelas ---------- */
+  var RANK = ['ketua kelas','wakil ketua','sekretaris','bendahara','anggota'];
+  var sorted = siswa.slice().sort(function(a, b){
+    var ra = RANK.indexOf(String(a.peran).toLowerCase()), rb = RANK.indexOf(String(b.peran).toLowerCase());
+    return (ra < 0 ? 99 : ra) - (rb < 0 ? 99 : rb) || (a.no || 999) - (b.no || 999);
+  });
+  $('anggotaGrid').innerHTML = sorted.map(function(s){
+    var role = String(s.peran || 'Anggota');
+    return '<div class="siswa-card" tabindex="0" data-role="' + esc(role.toLowerCase()) + '"><div class="siswa-avatar">' + esc(s.emoji || '🌱') + '</div><div class="nm">' + esc(s.nama) + (s.no ? ' ' + esc(s.no) : '') + '</div><div class="rl">' + esc(role) + '</div></div>';
+  }).join('');
+  $('statSiswa').textContent = siswa.length;
+  $('dashSiswa').textContent = siswa.length + ' Siswa';
+  $('statMapel').textContent = P.mapel;
+  var th = String(P.periode).split('/').map(Number);
+  $('statTahun').textContent = (th[0] && th[1]) ? (th[1] - th[0]) : '';
+  $('statTahunLbl').textContent = 'Tahun Ajaran ' + P.periode;
+  $('waliNama').textContent = P.wali.nama;
+  $('waliEmoji').textContent = P.wali.emoji;
+  $('waliKutipan').textContent = 'Wali Kelas' + (P.wali.kutipan ? ' — "' + P.wali.kutipan + '"' : '');
+
+  /* ---------- Jadwal ---------- */
+  function jam(x){ return String(x).replace(':', '.'); }
+  ['senin','selasa','rabu','kamis','jumat'].forEach(function(h){
+    var el = document.querySelector('.jadwal-list[data-day="' + h + '"]'); if (!el) return;
+    var items = jadwal[h] || [];
+    el.innerHTML = items.length ? items.map(function(x){
+      return '<div class="jadwal-item"><span>' + esc(x.mapel) + '</span><span class="jam">' + jam(x.mulai) + ' – ' + jam(x.selesai) + '</span></div>';
+    }).join('') : '<div class="jadwal-empty">Belum ada jadwal untuk hari ini.</div>';
+  });
+
+  /* ---------- Galeri ---------- */
+  var gHTML = galeri.map(function(x){
+    var s = safeSrc(x.src); if (!s) return '';
+    return '<figure class="gallery-item"><img loading="lazy" src="' + esc(s) + '" alt="' + esc(x.caption) + '"><figcaption>' + esc(x.caption) + '</figcaption></figure>';
+  }).join('');
+  $('galeriGrid').innerHTML = gHTML || '<p class="empty-note">Belum ada foto di galeri.</p>';
+
+  /* ---------- Tugas & pengumuman ---------- */
+  var KAT = {Tugas:'📝', Agenda:'📅', Info:'📢', Penting:'⚠️'};
+  $('tugasList').innerHTML = pengumuman.map(function(p){
+    var kat = KAT[p.kategori] ? p.kategori : 'Tugas';
+    return '<article class="task-card ' + kat.toLowerCase() + '">' + (p.meta ? '<div class="task-meta">' + esc(p.meta) + '</div>' : '')
+      + '<h3>' + esc(p.judul) + '</h3>' + (p.isi ? '<p>' + esc(p.isi) + '</p>' : '')
+      + '<span class="task-status">' + KAT[kat] + ' ' + esc(p.status || kat) + '</span></article>';
+  }).join('') || '<p class="empty-note">Belum ada tugas atau pengumuman.</p>';
+  if (pengumuman[0] && $('latestInfo')) $('latestInfo').textContent = (KAT[pengumuman[0].kategori] || '📢') + ' ' + pengumuman[0].judul;
+
+  /* ---------- Kegiatan (yang akan datang dulu, lalu 3 terakhir yang lewat) ---------- */
+  var now = new Date(), today = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate());
+  var valid = kegiatan.filter(function(k){ return tgl(k.tanggal); });
+  var up = valid.filter(function(k){ return k.tanggal >= today; }).sort(function(a, b){ return a.tanggal < b.tanggal ? -1 : 1; });
+  var past = valid.filter(function(k){ return k.tanggal < today; }).sort(function(a, b){ return a.tanggal < b.tanggal ? 1 : -1; }).slice(0, 3);
+  function kegHTML(k, lewat){
+    var t = tgl(k.tanggal), tipe = ['acara','info','lomba'].indexOf(k.tipe) > -1 ? k.tipe : 'lomba';
+    return '<div class="pgm-card ' + tipe + (lewat ? ' lewat' : '') + '"><div class="pgm-date"><div class="d">' + t.d + '</div><div class="m">' + BLN[t.mo - 1] + '</div></div>'
+      + '<div><div class="pgm-when">' + HARI_N[t.dt.getDay()] + ', ' + t.d + ' ' + BLN_P[t.mo - 1] + ' ' + t.y + (lewat ? ' • Sudah lewat' : '') + '</div><h3>' + esc(k.judul) + '</h3>' + (k.deskripsi ? '<p>' + esc(k.deskripsi) + '</p>' : '') + '</div></div>';
+  }
+  $('kegiatanList').innerHTML = up.map(function(k){ return kegHTML(k, false); }).concat(past.map(function(k){ return kegHTML(k, true); })).join('') || '<p class="empty-note">Belum ada kegiatan yang dijadwalkan.</p>';
+
+  /* ---------- Hitung mundur kelulusan ---------- */
+  var target = Date.parse(K.tanggal + 'T' + (K.jam || '08:00') + ':00+07:00');
+  var start = Date.parse((K.mulai || '2025-07-14') + 'T00:00:00+07:00');
+  if (isNaN(target)) { $('kelulusan').style.display = 'none'; }
+  else {
+    $('gradJudul').textContent = K.judul;
+    var td = tgl(K.tanggal);
+    $('gradTanggal').textContent = HARI_N[td.dt.getDay()] + ', ' + td.d + ' ' + BLN_P[td.mo - 1] + ' ' + td.y + ' • pukul ' + String(K.jam || '08:00').replace(':', '.') + ' WIB';
+    $('gradPesan').textContent = K.pesan || '';
+    var tick = function(){
+      var t = Date.now(), diff = Math.max(0, target - t);
+      $('gd').textContent = Math.floor(diff / 864e5);
+      $('gh').textContent = pad(Math.floor(diff % 864e5 / 36e5));
+      $('gm').textContent = pad(Math.floor(diff % 36e5 / 6e4));
+      $('gs').textContent = pad(Math.floor(diff % 6e4 / 1e3));
+      var pct = (isNaN(start) || target <= start) ? 0 : Math.max(0, Math.min(100, (t - start) / (target - start) * 100));
+      $('gradFill').style.width = pct + '%';
+      $('gradMarker').style.left = pct + '%';
+      $('gradPersen').textContent = diff === 0 ? 'Selamat lulus! 🎓' : Math.floor(pct) + '% perjalanan sudah dilewati';
+    };
+    tick(); setInterval(tick, 1000);
+  }
+})();
+</script>
+
+<script>
+  // Nav toggle (mobile)
+  const navtoggle = document.getElementById('navtoggle');
+  const navlinks = document.getElementById('navlinks');
+  navtoggle.addEventListener('click', () => navlinks.classList.toggle('open'));
+  navlinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navlinks.classList.remove('open')));
+
+  // Jadwal tabs
+  const tabs = document.querySelectorAll('.tab-btn');
+  const lists = document.querySelectorAll('.jadwal-list');
+  tabs.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabs.forEach(b => b.classList.remove('active'));
+      lists.forEach(l => l.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelector('.jadwal-list[data-day="' + btn.dataset.day + '"]').classList.add('active');
+    });
+  });
+
+  // Cari & filter siswa
+  const siswaSearch = document.getElementById('siswaSearch');
+  const filterChips = document.querySelectorAll('#siswaFilters .filter-chip');
+  const siswaCards = document.querySelectorAll('#anggotaGrid .siswa-card');
+  const siswaCount = document.getElementById('siswaCount');
+  const siswaEmpty = document.getElementById('siswaEmpty');
+  let activeRole = 'semua';
+
+  function applySiswaFilter(){
+    const keyword = siswaSearch.value.trim().toLowerCase();
+    let visible = 0;
+    siswaCards.forEach(card => {
+      const nama = card.querySelector('.nm').textContent.toLowerCase();
+      const role = card.dataset.role;
+      const cocokNama = nama.includes(keyword);
+      const cocokRole = activeRole === 'semua' || role === activeRole;
+      const tampil = cocokNama && cocokRole;
+      card.classList.toggle('hidden', !tampil);
+      if (tampil) visible++;
+    });
+    siswaCount.textContent = `Menampilkan ${visible} dari ${siswaCards.length} siswa`;
+    siswaEmpty.classList.toggle('show', visible === 0);
+  }
+
+  siswaSearch.addEventListener('input', applySiswaFilter);
+  filterChips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      filterChips.forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      activeRole = chip.dataset.role;
+      applySiswaFilter();
+    });
+  });
+  applySiswaFilter();
+
+  // Reveal on scroll
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => io.observe(el));
+
+  // Vine grows with scroll
+  const vinePath = document.getElementById('vine-path');
+  const vineLen = vinePath.getTotalLength();
+  vinePath.style.strokeDasharray = vineLen;
+  vinePath.style.strokeDashoffset = vineLen;
+  function updateVine(){
+    const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = Math.min(window.scrollY / scrollable, 1);
+    vinePath.style.strokeDashoffset = vineLen * (1 - pct);
+  }
+  window.addEventListener('scroll', updateVine);
+  updateVine();
+
+  // Reduced motion respect
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll('.firefly').forEach(f => f.style.animation = 'none');
+    revealEls.forEach(el => el.classList.add('in'));
+  }
+
+  // Dark mode
+  const themeToggle=document.getElementById('themeToggle');
+  const savedTheme=localStorage.getItem('kelas8i-theme');
+  if(savedTheme==='dark'){document.body.classList.add('dark');themeToggle.textContent='☀️';}
+  themeToggle.addEventListener('click',()=>{
+    document.body.classList.toggle('dark');
+    const dark=document.body.classList.contains('dark');
+    themeToggle.textContent=dark?'☀️':'🌙';
+    localStorage.setItem('kelas8i-theme',dark?'dark':'light');
+  });
+
+  // Gallery lightbox
+  const lightbox=document.getElementById('lightbox');
+  const lightboxImg=document.getElementById('lightboxImg');
+  document.querySelectorAll('.gallery-item img').forEach(img=>img.addEventListener('click',()=>{
+    lightboxImg.src=img.src; lightboxImg.alt=img.alt; lightbox.classList.add('open');
+  }));
+  document.getElementById('closeLightbox').addEventListener('click',()=>lightbox.classList.remove('open'));
+  lightbox.addEventListener('click',e=>{if(e.target===lightbox)lightbox.classList.remove('open');});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')lightbox.classList.remove('open');});
+
+  // V4 Dashboard
+  const dayNames=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+  const monthNames=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+  function parseTime(s){
+    const m=s.replace(/\./g,':').match(/(\d{1,2}):(\d{2})/);
+    return m ? Number(m[1])*60+Number(m[2]) : null;
+  }
+  function updateDashboard(){
+    const now=new Date(), day=dayNames[now.getDay()];
+    document.getElementById('todayDate').textContent=`${day}, ${now.getDate()} ${monthNames[now.getMonth()]} ${now.getFullYear()} • ${now.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}`;
+    const list=document.querySelector(`.jadwal-list[data-day="${day.toLowerCase()}"]`);
+    const box=document.getElementById('todaySchedule'), next=document.getElementById('nextLesson'), cd=document.getElementById('lessonCountdown');
+    box.innerHTML='';
+    if(!list||!list.querySelector('.jadwal-item')){next.textContent='Tidak ada jadwal sekolah hari ini';cd.textContent='Nikmati waktu istirahat! 🌿';return;}
+    const items=[...list.querySelectorAll('.jadwal-item')].map(el=>({name:el.querySelector('span')?.textContent.trim()||'',time:el.querySelector('.jam')?.textContent.trim()||''}));
+    items.forEach(x=>{const row=document.createElement('div');row.className='mini-row';row.innerHTML=`<span>${x.name}</span><span class="time">${x.time}</span>`;box.appendChild(row);});
+    const current=now.getHours()*60+now.getMinutes();
+    const upcoming=items.map(x=>({...x,start:parseTime(x.time)})).find(x=>x.start!==null&&x.start>current);
+    if(!upcoming){next.textContent='Semua pelajaran hari ini selesai 🎉';cd.textContent='Sampai jumpa besok!';}
+    else{next.textContent=upcoming.name;const diff=upcoming.start-current;cd.textContent=`Mulai sekitar ${Math.floor(diff/60)} jam ${diff%60} menit lagi`;}
+  }
+  updateDashboard();setInterval(updateDashboard,1000);
+
+  // Student profile popup
+  const profileModal=document.getElementById('profileModal'),profileClose=document.getElementById('profileClose');
+  document.querySelectorAll('.siswa-card').forEach(card=>{
+    const open=()=>{document.getElementById('profileName').textContent=card.querySelector('.nm')?.textContent||'Siswa';document.getElementById('profileRole').textContent=card.querySelector('.rl')?.textContent||'Anggota';document.getElementById('profileAvatar').textContent=card.querySelector('.siswa-avatar')?.textContent||'🌱';profileModal.classList.add('open');};
+    card.addEventListener('click',open);card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}});
+  });
+  profileClose.addEventListener('click',()=>profileModal.classList.remove('open'));
+  profileModal.addEventListener('click',e=>{if(e.target===profileModal)profileModal.classList.remove('open');});
+
+</script>
+
+</body>
+</html>
